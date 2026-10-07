@@ -1,86 +1,69 @@
 package br.mackenzie;
 
-import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
-public class Main implements ApplicationListener {
-    Texture bucketTexture;
-    SpriteBatch spriteBatch;
-    FitViewport viewport;
-    Sprite bucketSprite;
+public class Main extends ApplicationAdapter {
+    private SpriteBatch batch;
+    private OrthographicCamera camera;
+    private BitmapFont font;
 
-
+    private Texture passaroTexture;
+    private GameWorld gameWorld;
+    private InputHandler inputHandler;
 
     @Override
     public void create() {
-        bucketTexture = new Texture("bucket.png");
-        spriteBatch = new SpriteBatch();
-        viewport = new FitViewport(8, 5);
+        batch = new SpriteBatch();
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, 800, 480);
+        font = new BitmapFont();
 
-        bucketSprite = new Sprite(bucketTexture);
-        bucketSprite.setSize(1, 1);
+        // Carrega passaro.png ou usa bucket.png como alternativa se passaro.png não existir
+        if (Gdx.files.internal("passaro.png").exists()) {
+            passaroTexture = new Texture(Gdx.files.internal("passaro.png"));
+        } else {
+            passaroTexture = new Texture(Gdx.files.internal("bucket.png"));
+        }
 
-        // Prepare your application here.
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        viewport.update(width, height, true); // true centers the camera
+        gameWorld = new GameWorld(passaroTexture);
+        inputHandler = new InputHandler(gameWorld.getPlayer(), gameWorld);
     }
 
     @Override
     public void render() {
-        // Draw your application here.
-        input();
-        logic();
-        draw();
-    }
-
-    private void input() {
-        float speed = 4f;
         float delta = Gdx.graphics.getDeltaTime();
 
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            bucketSprite.translateX(speed * delta); // move the bucket right
-        } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            bucketSprite.translateX(-speed * delta); // move the bucket left
+        inputHandler.handleInput();
+        gameWorld.update(delta);
+
+        camera.update();
+        ScreenUtils.clear(0.3f, 0.6f, 0.9f, 1f);
+
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+
+        gameWorld.render(batch);
+
+        font.draw(batch, "Pontos: " + (gameWorld.getScore() / 2), 20, 460);
+
+        if (gameWorld.isGameOver()) {
+            font.draw(batch, "GAME OVER!", 360, 260);
+            font.draw(batch, "Pressione ESPACO ou clique para reiniciar", 260, 230);
         }
-    }
 
-    private void logic() {
-
-    }
-
-    private void draw() {
-        ScreenUtils.clear(Color.BLACK);
-        viewport.apply();
-        spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
-
-        spriteBatch.begin();
-        bucketSprite.draw(spriteBatch);
-        spriteBatch.end();
-    }
-
-    @Override
-    public void pause() {
-        // Invoked when your application is paused.
-    }
-
-    @Override
-    public void resume() {
-        // Invoked when your application is resumed after pause.
+        batch.end();
     }
 
     @Override
     public void dispose() {
-        // Destroy application's resources here.
+        batch.dispose();
+        font.dispose();
+        passaroTexture.dispose();
     }
 }
