@@ -14,7 +14,6 @@ public class Player extends GameObject {
     public Player(float x, float y, Texture texture) {
         super(x, y, 32, 24);
 
-        // Se a textura tiver tamanho do spritesheet (96x24), fatiamos em 3 quadros
         if (texture.getWidth() >= 96) {
             this.frames = new TextureRegion[3];
             this.frames[0] = new TextureRegion(texture, 0, 0, 32, 24);

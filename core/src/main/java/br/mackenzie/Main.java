@@ -2,7 +2,9 @@ package br.mackenzie;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,6 +16,7 @@ public class Main extends ApplicationAdapter {
     private BitmapFont font;
 
     private Texture passaroTexture;
+    private Texture pipeTexture;
     private GameWorld gameWorld;
     private InputHandler inputHandler;
 
@@ -24,15 +27,33 @@ public class Main extends ApplicationAdapter {
         camera.setToOrtho(false, 800, 480);
         font = new BitmapFont();
 
-        // Carrega passaro.png ou usa bucket.png como alternativa se passaro.png não existir
+        // Tenta carregar imagem do pássaro ou gera bloco amarelo se não existir
         if (Gdx.files.internal("passaro.png").exists()) {
             passaroTexture = new Texture(Gdx.files.internal("passaro.png"));
-        } else {
+        } else if (Gdx.files.internal("bucket.png").exists()) {
             passaroTexture = new Texture(Gdx.files.internal("bucket.png"));
+        } else {
+            passaroTexture = criarTexturaSolida(32, 24, Color.YELLOW);
         }
 
-        gameWorld = new GameWorld(passaroTexture);
+        // Tenta carregar imagem do cano ou gera bloco verde se não existir
+        if (Gdx.files.internal("pipe.png").exists()) {
+            pipeTexture = new Texture(Gdx.files.internal("pipe.png"));
+        } else {
+            pipeTexture = criarTexturaSolida(1, 1, Color.GREEN);
+        }
+
+        gameWorld = new GameWorld(passaroTexture, pipeTexture);
         inputHandler = new InputHandler(gameWorld.getPlayer(), gameWorld);
+    }
+
+    private Texture criarTexturaSolida(int width, int height, Color color) {
+        Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+        pixmap.setColor(color);
+        pixmap.fill();
+        Texture texture = new Texture(pixmap);
+        pixmap.dispose();
+        return texture;
     }
 
     @Override
@@ -65,5 +86,6 @@ public class Main extends ApplicationAdapter {
         batch.dispose();
         font.dispose();
         passaroTexture.dispose();
+        pipeTexture.dispose();
     }
 }

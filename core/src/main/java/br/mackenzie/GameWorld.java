@@ -11,12 +11,14 @@ public class GameWorld {
     private float spawnTimer;
     private int score;
     private boolean gameOver;
+    private Texture pipeTexture;
 
     private static final float SPAWN_INTERVAL = 1.6f;
     private static final float GAP_SIZE = 130f;
 
-    public GameWorld(Texture passaroTexture) {
+    public GameWorld(Texture passaroTexture, Texture pipeTexture) {
         this.player = new Player(100, 240, passaroTexture);
+        this.pipeTexture = pipeTexture;
         this.pipes = new Array<>();
         this.score = 0;
         this.gameOver = false;
@@ -27,14 +29,12 @@ public class GameWorld {
 
         player.update(delta);
 
-        // Geração contínua de canos
         spawnTimer += delta;
         if (spawnTimer >= SPAWN_INTERVAL) {
             spawnTimer = 0;
             spawnPipes();
         }
 
-        // Atualização dos canos e verificação de colisões
         for (int i = pipes.size - 1; i >= 0; i--) {
             Pipe pipe = pipes.get(i);
             pipe.update(delta);
@@ -53,7 +53,6 @@ public class GameWorld {
             }
         }
 
-        // Colisão com o chão ou limite superior da tela (480px de altura)
         if (player.getPosition().y <= 0 || player.getPosition().y >= 480 - player.getHeight()) {
             gameOver = true;
         }
@@ -65,14 +64,17 @@ public class GameWorld {
         float maxHeight = 480f - GAP_SIZE - minHeight;
         float bottomHeight = MathUtils.random(minHeight, maxHeight);
 
-        Pipe bottomPipe = new Pipe(800, 0, pipeWidth, bottomHeight);
-        Pipe topPipe = new Pipe(800, bottomHeight + GAP_SIZE, pipeWidth, 480f - (bottomHeight + GAP_SIZE));
+        Pipe bottomPipe = new Pipe(800, 0, pipeWidth, bottomHeight, pipeTexture);
+        Pipe topPipe = new Pipe(800, bottomHeight + GAP_SIZE, pipeWidth, 480f - (bottomHeight + GAP_SIZE), pipeTexture);
 
         pipes.add(bottomPipe);
         pipes.add(topPipe);
     }
 
     public void render(SpriteBatch batch) {
+        for (Pipe pipe : pipes) {
+            pipe.render(batch);
+        }
         player.render(batch);
     }
 
