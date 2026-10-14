@@ -14,11 +14,11 @@ public class Lwjgl3Launcher {
     }
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
-        Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
-        configuration.setTitle("Jogo de Reabilitação");
-        configuration.setWindowedMode(800, 480); // Define a resolução fixa sem consultar o monitor
-        configuration.useVsync(true);
-        configuration.setFPSLimit(60);
-        return configuration;
-    }
+    Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
+    configuration.setTitle("Jogo de Reabilitação");
+    configuration.setWindowedMode(800, 480);
+    configuration.useVsync(true);
+    configuration.setForegroundFPS(60); // Corrigido de setFPSLimit para setForegroundFPS
+    return configuration;
+}
 }
