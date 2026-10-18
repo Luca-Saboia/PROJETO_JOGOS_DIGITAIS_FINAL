@@ -31,3 +31,15 @@ Useful Gradle tasks and flags:
 
 Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should be replaced with the ID of a specific project.
 For example, `core:clean` removes `build` folder only from the `core` project.
+
+## Niveis de dificuldade
+
+Ao iniciar, escolha **FACIL**, **MEDIO** ou **DIFICIL** no menu. Cada partida comeca com a contagem `3`, `2`, `1`, `GO!`.
+
+- **Facil:** canos mais lentos e afastados, com abertura maior e pequenas variacoes de altura.
+- **Medio:** canos um pouco mais rapidos e frequentes, com abertura um pouco menor e variacao de altura controlada.
+- **Dificil:** canos mais rapidos e frequentes, com abertura menor e variacao de altura maior, mas limitada.
+
+Durante a partida, pressione **ESPACO** ou clique/toque na tela para fazer o passaro subir. Quando a partida terminar, use **JOGAR NOVAMENTE** para reiniciar no mesmo nivel ou **MENU** para escolher outra dificuldade. O controle pelo Arduino ainda nao foi alterado.
+
+Os parametros de velocidade, frequencia dos canos, tamanho da abertura e variacao vertical ficam centralizados em `core/src/main/java/br/mackenzie/Difficulty.java`, facilitando o ajuste posterior.
