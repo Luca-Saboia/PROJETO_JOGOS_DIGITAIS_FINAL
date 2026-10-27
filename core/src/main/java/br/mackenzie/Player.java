@@ -2,52 +2,43 @@ package br.mackenzie;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 
-public class Player extends GameObject {
-    private static final float GRAVITY = -1000f;
-    private static final float JUMP_FORCE = 350f;
+public class Player {
+    private Vector2 position;
+    private Vector2 velocity;
+    private int width, height;
+    
+    // Textura do pássaro
+    private Texture texture;
 
-    private TextureRegion[] frames;
-    private float animTime;
+    public Player(float x, float y, int width, int height) {
+        this.position = new Vector2(x, y);
+        this.velocity = new Vector2();
+        this.width = width;
+        this.height = height;
+        
+        // Carrega a imagem do passarinho da pasta assets
+        this.texture = new Texture("flappybird.png");
+    }
 
-    public Player(float x, float y, Texture texture) {
-        super(x, y, 32, 24);
+    public void update(float delta) {
+        // Lógica de movimentação e física do jogador
+    }
 
-        if (texture.getWidth() >= 96) {
-            this.frames = new TextureRegion[3];
-            this.frames[0] = new TextureRegion(texture, 0, 0, 32, 24);
-            this.frames[1] = new TextureRegion(texture, 32, 0, 32, 24);
-            this.frames[2] = new TextureRegion(texture, 64, 0, 32, 24);
-        } else {
-            this.frames = new TextureRegion[1];
-            this.frames[0] = new TextureRegion(texture);
+    public void render(SpriteBatch batch) {
+        // Desenha a textura na posição atual do jogador
+        batch.draw(texture, position.x, position.y, width, height);
+    }
+
+    public void dispose() {
+        // Libera a memória da textura ao fechar a tela/jogo
+        if (texture != null) {
+            texture.dispose();
         }
     }
 
-    @Override
-    public void update(float delta) {
-        animTime += delta;
-
-        velocity.add(0, GRAVITY * delta);
-        position.add(0, velocity.y * delta);
-
-        bounds.setPosition(position.x, position.y);
-    }
-
-    public void jump() {
-        velocity.y = JUMP_FORCE;
-    }
-
-    @Override
-    public void render(SpriteBatch batch) {
-        int frameIndex = (int) (animTime * 10) % frames.length;
-        batch.draw(frames[frameIndex], position.x, position.y, width, height);
-    }
-
-    public void reset(float x, float y) {
-        position.set(x, y);
-        velocity.set(0, 0);
-        bounds.setPosition(x, y);
+    public Vector2 getPosition() {
+        return position;
     }
 }
