@@ -91,7 +91,12 @@ public class Main extends ApplicationAdapter {
         layout = new GlyphLayout();
 
         // Carrega o pássaro pelos nomes utilizados no projeto.
-        if (Gdx.files.internal("passaro.png").exists()) {
+        if (Gdx.files.internal("flappybird.png").exists()) {
+
+            passaroTexture =
+                    new Texture(Gdx.files.internal("flappybird.png"));
+
+        } else if (Gdx.files.internal("passaro.png").exists()) {
 
             passaroTexture =
                     new Texture(Gdx.files.internal("passaro.png"));
@@ -108,7 +113,12 @@ public class Main extends ApplicationAdapter {
         }
 
         // Carrega a textura dos obstáculos.
-        if (Gdx.files.internal("pipe.png").exists()) {
+        if (Gdx.files.internal("toppipe.png").exists()) {
+
+            pipeTexture =
+                    new Texture(Gdx.files.internal("toppipe.png"));
+
+        } else if (Gdx.files.internal("pipe.png").exists()) {
 
             pipeTexture =
                     new Texture(Gdx.files.internal("pipe.png"));

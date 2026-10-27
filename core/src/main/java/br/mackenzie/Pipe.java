@@ -3,36 +3,81 @@ package br.mackenzie;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class Pipe {
-    private float x, y;
-    private int width, height;
-    
-    // Textura do cano
-    private Texture pipeTexture;
+public class Pipe extends GameObject {
 
-    public Pipe(float x, float y, int width, int height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        
-        // Carrega a imagem do cano da pasta assets
-        this.pipeTexture = new Texture("toppipe.png");
+    private static final float DEFAULT_SPEED = 150f;
+
+    private final float speed;
+    private boolean scored;
+    private Texture texture;
+
+    public Pipe(
+            float x,
+            float y,
+            float width,
+            float height,
+            Texture texture) {
+
+        this(
+                x,
+                y,
+                width,
+                height,
+                texture,
+                DEFAULT_SPEED
+        );
     }
 
+    public Pipe(
+            float x,
+            float y,
+            float width,
+            float height,
+            Texture texture,
+            float speed) {
+
+        super(x, y, width, height);
+
+        this.texture = texture;
+        this.speed = speed;
+        this.scored = false;
+    }
+
+    @Override
     public void update(float delta) {
-        // Lógica de movimento do cano para a esquerda
+
+        position.x -= speed * delta;
+
+        bounds.setPosition(
+                position.x,
+                position.y
+        );
     }
 
+    @Override
     public void render(SpriteBatch batch) {
-        // Desenha o cano na tela
-        batch.draw(pipeTexture, x, y, width, height);
+
+        if (texture != null) {
+
+            batch.draw(
+                    texture,
+                    position.x,
+                    position.y,
+                    width,
+                    height
+            );
+        }
     }
 
-    public void dispose() {
-        // Libera a memória da textura do cano
-        if (pipeTexture != null) {
-            pipeTexture.dispose();
-        }
+    public boolean isOffscreen() {
+        return position.x + width < 0;
+    }
+
+    public boolean isScored() {
+        return scored;
+    }
+
+    public void setScored(boolean scored) {
+        this.scored = scored;
     }
 }

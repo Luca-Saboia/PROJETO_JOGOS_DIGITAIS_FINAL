@@ -1,13 +1,10 @@
-import org.gradle.internal.os.OperatingSystem
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+eclipse.project.name = appName + '-core'
 
-project.ext.assetsDir = new File("../assets");
+dependencies {
+  api "com.badlogicgames.gdx:gdx:$gdxVersion"
 
-task run(type: JavaExec) {
-    mainClass = "br.mackenzie.lwjgl3.Lwjgl3Launcher"
-    classpath = sourceSets.main.runtimeClasspath
-    standardInput = System.in
-    workingDir = assetsDir
-    if (OperatingSystem.current().isMacOsX()) {
-        jvmArgs += "-XstartOnFirstThread"
-    }
+  if(enableGraalNative == 'true') {
+    implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
+  }
 }

@@ -2,43 +2,48 @@ package br.mackenzie;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class Player {
-    private Vector2 position;
-    private Vector2 velocity;
-    private int width, height;
-    
-    // Textura do pássaro
-    private Texture texture;
+public class Player extends GameObject {
+    private static final float GRAVITY = -1000f;
+    private static final float JUMP_FORCE = 350f;
 
-    public Player(float x, float y, int width, int height) {
-        this.position = new Vector2(x, y);
-        this.velocity = new Vector2();
-        this.width = width;
-        this.height = height;
-        
-        // Carrega a imagem do passarinho da pasta assets
-        this.texture = new Texture("flappybird.png");
+    private TextureRegion[] frames;
+    private float animTime;
+
+    public Player(float x, float y, Texture texture) {
+        super(x, y, 32, 24);
+
+        // O arquivo flappybird.png fornecido no projeto e uma imagem unica,
+        // nao uma spritesheet de tres quadros de 32x24.
+        this.frames = new TextureRegion[] {
+                new TextureRegion(texture)
+        };
     }
 
+    @Override
     public void update(float delta) {
-        // Lógica de movimentação e física do jogador
+        animTime += delta;
+
+        velocity.add(0, GRAVITY * delta);
+        position.add(0, velocity.y * delta);
+
+        bounds.setPosition(position.x, position.y);
     }
 
+    public void jump() {
+        velocity.y = JUMP_FORCE;
+    }
+
+    @Override
     public void render(SpriteBatch batch) {
-        // Desenha a textura na posição atual do jogador
-        batch.draw(texture, position.x, position.y, width, height);
+        int frameIndex = (int) (animTime * 10) % frames.length;
+        batch.draw(frames[frameIndex], position.x, position.y, width, height);
     }
 
-    public void dispose() {
-        // Libera a memória da textura ao fechar a tela/jogo
-        if (texture != null) {
-            texture.dispose();
-        }
-    }
-
-    public Vector2 getPosition() {
-        return position;
+    public void reset(float x, float y) {
+        position.set(x, y);
+        velocity.set(0, 0);
+        bounds.setPosition(x, y);
     }
 }
