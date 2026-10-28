@@ -40,6 +40,9 @@ Ao iniciar, escolha **FACIL**, **MEDIO** ou **DIFICIL** no menu. Cada partida co
 - **Medio:** canos um pouco mais rapidos e frequentes, com abertura um pouco menor e variacao de altura controlada.
 - **Dificil:** canos mais rapidos e frequentes, com abertura menor e variacao de altura maior, mas limitada.
 
-Durante a partida, pressione **ESPACO** ou clique/toque na tela para fazer o passaro subir. Quando a partida terminar, use **JOGAR NOVAMENTE** para reiniciar no mesmo nivel ou **MENU** para escolher outra dificuldade. O controle pelo Arduino ainda nao foi alterado.
+Durante a partida, pressione **ESPACO** ou clique/toque na tela para fazer o passaro subir. Quando a partida terminar, use **JOGAR NOVAMENTE** para reiniciar no mesmo nivel ou **MENU** para escolher outra dificuldade. O controle por Arduino usa o sketch em `arduino/Pressao.ino`; consulte `LEIA-ME-ARDUINO-SEM-PULO.md` para calibração, limiar do FSR e diagnóstico serial.
 
 Os parametros de velocidade, frequencia dos canos, tamanho da abertura e variacao vertical ficam centralizados em `core/src/main/java/br/mackenzie/Difficulty.java`, facilitando o ajuste posterior.
+
+
+Arduino: a porta serial padrao e COM4. Feche o Monitor Serial do Arduino IDE antes de executar `gradlew.bat lwjgl3:run`. Veja `LEIA-ME-ARDUINO-SEM-PULO.md` para diagnostico do sensor.
