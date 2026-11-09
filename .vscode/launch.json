@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Launch Flappy Game",
+      "request": "launch",
+      "projectName": "lwjgl3",
+      "mainClass": "br.mackenzie.lwjgl3.Lwjgl3Launcher",
+      "cwd": "${workspaceFolder}/assets"
+    }
+  ]
+}
